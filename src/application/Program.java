@@ -1,6 +1,5 @@
 package application;
 
-import java.security.DrbgParameters.Reseed;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,18 +41,16 @@ public class Program {
 			System.out.println("Check-out date (dd/MM/yyyy)");
 			checkout = sdf.parse(sc.next());
 			
-			Date now = new Date(); // cria uma variavel com a data de agora
 			
-			if (checkin.before(now) || checkout.before(now)) { // before == antes
-				System.out.println("Erro in reservation");
-			}else {
-				if (! checkout.after(checkin)) {// after checa se a data e posterior a outra
-					System.out.println("Error Date......");
-				}else {
-					reservation.updateDates(checkin, checkout);
-					System.out.println("Reservation: " + reservation);
-				}
-			}
+					String error = reservation.updateDates(checkin, checkout);
+					if (error != null) {
+						System.out.println("Error in reservation" + error);
+					}else {
+						System.out.println("Reservation: " + reservation);
+					}
+					
+				
+			
 			
 			sc.close();
 			

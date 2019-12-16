@@ -37,9 +37,17 @@ public class Reservation {
 		return TimeUnit.DAYS.convert(diff,TimeUnit.MILLISECONDS); // Metodo que converte a data em milisegundos
 	}
 	
-	public void updateDates(Date checkin, Date checkout) {
+	public String updateDates(Date checkin, Date checkout) {
+		Date now = new Date(); // cria uma variavel com a data de agora		
+		if (checkin.before(now) || checkout.before(now)) { // before == antes
+			return "Erro in reservation";
+		}
+		if (! checkout.after(checkin)) {// after checa se a data e posterior a outra
+				return "Error Date......";
+		}
 		this.chekin = checkin;
 		this.checkout = checkout;
+		return null;
 	}
 	
 	@Override
