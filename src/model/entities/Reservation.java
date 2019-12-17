@@ -4,17 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exception.DomainException;
+
 public class Reservation {
 	private  Integer roomNumber;
-	private Date chekin;
+	private Date checkin;
 	private Date checkout;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
-	public Reservation(Integer roomNumber, Date chekin, Date ckeckout) {
-		super();
+	public Reservation(Integer roomNumber, Date checkin, Date ckeckout) {
+		if (! checkout.after(checkin)) {// after checa se a data e posterior a outra
+			throw new DomainException("Error Date......");
+	}
 		this.roomNumber = roomNumber;
-		this.chekin = chekin;
+		this.checkin = checkin;
 		this.checkout = ckeckout;
 	}
 	public Integer getRoomNumber() {
@@ -24,7 +28,7 @@ public class Reservation {
 		this.roomNumber = roomNumber;
 	}
 	public Date getChekin() {
-		return chekin;
+		return checkin;
 	}
 	
 	public Date getCkeckout() {
@@ -33,21 +37,20 @@ public class Reservation {
 	
 	
 	public long duration() {
-		long diff = checkout.getTime() - chekin.getTime();
+		long diff = checkout.getTime() - checkin.getTime();
 		return TimeUnit.DAYS.convert(diff,TimeUnit.MILLISECONDS); // Metodo que converte a data em milisegundos
 	}
 	
-	public String updateDates(Date checkin, Date checkout) {
+	public void updateDates(Date checkin, Date checkout){
 		Date now = new Date(); // cria uma variavel com a data de agora		
 		if (checkin.before(now) || checkout.before(now)) { // before == antes
-			return "Erro in reservation";
+			throw new DomainException("Erro in reservation"); //Lança a excecao... retorna o erros quando os argumentos sao invalidos
 		}
 		if (! checkout.after(checkin)) {// after checa se a data e posterior a outra
-				return "Error Date......";
+				throw new DomainException("Error Date......");
 		}
-		this.chekin = checkin;
+		this.checkin = checkin;
 		this.checkout = checkout;
-		return null;
 	}
 	
 	@Override
@@ -55,7 +58,7 @@ public class Reservation {
 		return "Room"
 				+ roomNumber
 				+ ", check-in: "
-				+ sdf.format(chekin)
+				+ sdf.format(checkin)
 				+ ", check-out: "
 				+ sdf.format(checkout)
 				+ ", "
